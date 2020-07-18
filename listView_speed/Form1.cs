@@ -24,11 +24,7 @@ namespace listView_speed
 
             //loadData
         }
-
-        //private void Form1_Load(object sender, EventArgs e)
-        //{
-        //    Console.WriteLine("22222222222222222222222222222222222");
-        //}
+        
 
         private void dataLoadBtn_Clicked(object sender, EventArgs e)
         {
@@ -83,10 +79,6 @@ namespace listView_speed
             myLog("listView.Items.Add(item).End");
             
             myLog("dataLoadFromSVC.End");
-
-        }
-        private void dataLoad()
-        {
 
         }
 
