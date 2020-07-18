@@ -28,7 +28,7 @@ method2
 | log      | ###############dataLoadFromSVC.Start : 0ms<br/>###############dataLoad.Start : 17ms<br/>###############dataLoad.End : 2,965ms<br/>###############dataLoadFromSVC.End : 2,965ms |
 | 소요시간 | **약 2.9초**                                                 |
 
-method4
+method3
 
 | 제목     | ListViewItems를 우선 만들고, 나중에 add하기                  |
 | -------- | ------------------------------------------------------------ |
