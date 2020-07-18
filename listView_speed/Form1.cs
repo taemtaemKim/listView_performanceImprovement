@@ -52,9 +52,8 @@ namespace listView_speed
             // data 추가
             int count = 0;
 
-            List<ListViewItem> items = new List<ListViewItem>();
-
             //items 채우기
+            listView.BeginUpdate();
             while (!reader.EndOfStream)
             {
                 String line = reader.ReadLine();
@@ -66,20 +65,18 @@ namespace listView_speed
                     item.SubItems.Add(val);
                 }
 
-                items.Add(item);
-            }
-            myLog("dataLoad.End");
+                listView.Items.Add(item);
 
-            myLog("listView.Items.Add(item).Start");
-            //items하나씩 listView 넣기
-            listView.BeginUpdate();
-            for (int i = 0; i < items.Count; i++)
-                listView.Items.Add(items[i]);
+                count++;
+                if (count > dataN)
+                    break;
+            }
             listView.EndUpdate();
-            myLog("listView.Items.Add(item).End");
-            
+
+            myLog("dataLoad.End");
             myLog("dataLoadFromSVC.End");
 
+            
         }
 
         private void myLog(String title)
