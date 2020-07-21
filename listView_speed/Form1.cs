@@ -1,91 +1,121 @@
 ﻿using System;
-using System.Windows.Forms;
-using System.IO;
-using System.Diagnostics;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Text;
+using System.Windows.Forms;
+
+// 출처 
+// https://docs.microsoft.com/ko-kr/dotnet/api/system.windows.forms.listview.virtualmode?view=netcore-3.1
 
 namespace listView_speed
 {
+
     public partial class Form1 : Form
     {
+        private ListViewItem[] myCache; //array to cache items for the virtual list
+        private int firstItem; //stores the index of the first item in the cache
 
-        Stopwatch stopwatch;
-        int dataN = 10000;
+        
 
         public Form1()
         {
-            //Component init
-            InitializeComponent();
+            //Create a simple ListView.
+            ListView listView1 = new ListView();
+            listView1.View = View.SmallIcon;
+            listView1.VirtualMode = true;
+            listView1.VirtualListSize = 100000;
 
+            //Hook up handlers for VirtualMode events.
+            listView1.RetrieveVirtualItem += new RetrieveVirtualItemEventHandler(listView1_RetrieveVirtualItem);
+            listView1.CacheVirtualItems += new CacheVirtualItemsEventHandler(listView1_CacheVirtualItems);
+            listView1.SearchForVirtualItem += new SearchForVirtualItemEventHandler(listView1_SearchForVirtualItem);
 
-            //stopwatch start
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
+            //Add ListView to the form.
+            this.Controls.Add(listView1);
 
-            //loadData
-        }
+            //Search for a particular virtual item.
+            //Notice that we never manually populate the collection!
+            //If you leave out the SearchForVirtualItem handler, this will return null.
+            ListViewItem lvi = listView1.FindItemWithText("111111");
 
-
-        private void dataLoadBtn_Clicked(object sender, EventArgs e)
-        {
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
-            dataLoadFromSVC();
-        }
-
-        private void dataLoadFromSVC()
-        {
-            listView.Clear();
-            myLog("dataLoadFromSVC.Start");
-            var reader = new StreamReader(@"C:\raw.csv");
-
-            //coloms 추가
-            var columnsLine = reader.ReadLine();
-            var columnsValues = columnsLine.Split(',');
-            foreach (String val in columnsValues)
+            //Select the item found and scroll it into view.
+            if (lvi != null)
             {
-                //Console.WriteLine(val);
-                listView.Columns.Add(val, 70);
+                listView1.SelectedIndices.Add(lvi.Index);
+                listView1.EnsureVisible(lvi.Index);
+            }
+        }
+
+        //The basic VirtualMode function.  Dynamically returns a ListViewItem
+        //with the required properties; in this case, the square of the index.
+        void listView1_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
+        {
+            //Caching is not required but improves performance on large sets.
+            //To leave out caching, don't connect the CacheVirtualItems event 
+            //and make sure myCache is null.
+
+            //check to see if the requested item is currently in the cache
+            if (myCache != null && e.ItemIndex >= firstItem && e.ItemIndex < firstItem + myCache.Length)
+            {
+                //A cache hit, so get the ListViewItem from the cache instead of making a new one.
+                e.Item = myCache[e.ItemIndex - firstItem];
+            }
+            else
+            {
+                //A cache miss, so create a new ListViewItem and pass it back.
+                int x = e.ItemIndex * e.ItemIndex;
+                e.Item = new ListViewItem(x.ToString());
+            }
+        }
+
+        //Manages the cache.  ListView calls this when it might need a 
+        //cache refresh.
+        void listView1_CacheVirtualItems(object sender, CacheVirtualItemsEventArgs e)
+        {
+            //We've gotten a request to refresh the cache.
+            //First check if it's really neccesary.
+            if (myCache != null && e.StartIndex >= firstItem && e.EndIndex <= firstItem + myCache.Length)
+            {
+                //If the newly requested cache is a subset of the old cache, 
+                //no need to rebuild everything, so do nothing.
+                return;
             }
 
-            myLog("dataLoad.Start");
-            // data 추가
-            int count = 0;
+            //Now we need to rebuild the cache.
+            firstItem = e.StartIndex;
+            int length = e.EndIndex - e.StartIndex + 1; //indexes are inclusive
+            myCache = new ListViewItem[length];
 
-            //items 채우기
-            while (!reader.EndOfStream)
+            //Fill the cache with the appropriate ListViewItems.
+            int x = 0;
+            for (int i = 0; i < length; i++)
             {
-                String line = reader.ReadLine();
-                String[] values = line.Split(',');
-                var item = new ListViewItem(values[0]);
-
-                foreach (String val in values)
-                {
-                    item.SubItems.Add(val);
-                }
-
-                listView.Items.Add(item);
-
-                count++;
-                if (count > dataN)
-                    break;
+                x = (i + firstItem) * (i + firstItem);
+                myCache[i] = new ListViewItem(x.ToString());
             }
-
-            myLog("dataLoad.End");
-            myLog("dataLoadFromSVC.End");
-
-
         }
 
-        private void myLog(String title)
+        //This event handler enables search functionality, and is called
+        //for every search request when in Virtual mode.
+        void listView1_SearchForVirtualItem(object sender, SearchForVirtualItemEventArgs e)
         {
-
-            String formatTime = String.Format("{0:#,###}", stopwatch.ElapsedMilliseconds);
-
-            Console.Write("###############" + title + " : ");
-            Console.Write(formatTime == "" ? "0" : formatTime);
-            Console.WriteLine("ms");
+            //We've gotten a search request.
+            //In this example, finding the item is easy since it's
+            //just the square of its index.  We'll take the square root
+            //and round.
+            double x = 0;
+            if (Double.TryParse(e.Text, out x)) //check if this is a valid search
+            {
+                x = Math.Sqrt(x);
+                x = Math.Round(x);
+                e.Index = (int)x;
+            }
+            //If e.Index is not set, the search returns null.
+            //Note that this only handles simple searches over the entire
+            //list, ignoring any other settings.  Handling Direction, StartIndex,
+            //and the other properties of SearchForVirtualItemEventArgs is up
+            //to this handler.
         }
-
     }
 }

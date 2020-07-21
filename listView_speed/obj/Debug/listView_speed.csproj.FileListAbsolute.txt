@@ -10,3 +10,9 @@ C:\Users\speak\Google 드라이브\현대아이티앤이\POS\200717_속도개선
 C:\Users\speak\Google 드라이브\현대아이티앤이\POS\listView_performanceImprovement\listView_speed\bin\Debug\listView_speed.exe.config
 C:\Users\speak\Google 드라이브\현대아이티앤이\POS\listView_performanceImprovement\listView_speed\obj\Debug\listView_speed.exe
 C:\Users\speak\Google 드라이브\현대아이티앤이\POS\listView_performanceImprovement\listView_speed\obj\Debug\listView_speed.pdb
+C:\Users\speak\Google 드라이브\현대아이티앤이\POS\listView_performanceImprovement\listView_speed\obj\Debug\listView_speed.csprojResolveAssemblyReference.cache
+C:\Users\speak\Google 드라이브\현대아이티앤이\POS\listView_performanceImprovement\listView_speed\obj\Debug\listView_speed.Properties.Resources.resources
+C:\Users\speak\Google 드라이브\현대아이티앤이\POS\listView_performanceImprovement\listView_speed\obj\Debug\listView_speed.csproj.GenerateResource.Cache
+C:\Users\speak\Google 드라이브\현대아이티앤이\POS\listView_performanceImprovement\listView_speed\obj\Debug\listView_speed.Form1.resources
+C:\Users\speak\Google 드라이브\현대아이티앤이\POS\listView_performanceImprovement\listView_speed\bin\Debug\listView_speed.exe
+C:\Users\speak\Google 드라이브\현대아이티앤이\POS\listView_performanceImprovement\listView_speed\bin\Debug\listView_speed.pdb
