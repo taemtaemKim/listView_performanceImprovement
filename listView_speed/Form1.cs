@@ -55,7 +55,8 @@ namespace listView_speed
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            //button을 VirtualListSize를 0으로 만든다. 한번 리셋하는 과정임.
+            listView1.VirtualListSize = 0;
             try
             {
                 dataN = Int32.Parse(textBox1.Text);
