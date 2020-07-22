@@ -24,6 +24,7 @@ namespace listView_speed
 
             listView1.VirtualMode = true;
             listView1.VirtualListSize = dataN;
+            listView1.FullRowSelect = true;
             //listView1.MinimumSize = new System.Drawing.Size(500, 250);
             //listView1.Clear();
 
@@ -50,7 +51,6 @@ namespace listView_speed
         {
             //Console.WriteLine(e.ItemIndex);
             e.Item = myDatum[e.ItemIndex];
-            
         }
 
         private void button1_Click(object sender, EventArgs e)
